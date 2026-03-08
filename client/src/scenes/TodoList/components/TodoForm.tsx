@@ -18,6 +18,9 @@ const TodoForm: React.FC<TodoFormProps> = ({ onClose }) => {
   const { addTodo } = useTodo()
   const { showLoading, hideLoading } = useLoading()
 
+  const today = new Date()
+  const minDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`
+
   const {
     register,
     handleSubmit,
@@ -70,7 +73,7 @@ const TodoForm: React.FC<TodoFormProps> = ({ onClose }) => {
         <InputField
           type="date"
           error={errors.deadline?.message}
-          min={new Date().toISOString().split("T")[0]}
+          min={minDate}
           {...register("deadline")}
         />
       </div>
