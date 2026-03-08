@@ -17,66 +17,59 @@ func NewTodoHandler(repo *repository.TodoRepository) *TodoHandler {
 	return &TodoHandler{repo: repo}
 }
 
+func response(c *gin.Context, statusCode int, message string, data any) {
+	c.JSON(statusCode, gin.H{
+		"statusCode": statusCode,
+		"message":    message,
+		"data":       data,
+	})
+}
+
 func (h *TodoHandler) GetAll(c *gin.Context) {
 	todos, err := h.repo.GetAll()
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		response(c, http.StatusInternalServerError, err.Error(), nil)
 		return
 	}
-	c.JSON(http.StatusOK, todos)
+	response(c, http.StatusOK, "success", todos)
 }
 
 func (h *TodoHandler) Create(c *gin.Context) {
 	var todo models.Todo
 	if err := c.ShouldBindJSON(&todo); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		response(c, http.StatusBadRequest, err.Error(), nil)
 		return
 	}
 	if err := h.repo.Create(&todo); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		response(c, http.StatusInternalServerError, err.Error(), nil)
 		return
 	}
-	c.JSON(http.StatusCreated, todo)
+	response(c, http.StatusCreated, "success", todo)
 }
 
 func (h *TodoHandler) Update(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
 	todo, err := h.repo.GetByID(uint(id))
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "todo not found"})
+		response(c, http.StatusNotFound, "todo not found", nil)
 		return
 	}
 	if err := c.ShouldBindJSON(&todo); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		response(c, http.StatusBadRequest, err.Error(), nil)
 		return
 	}
 	if err := h.repo.Update(&todo); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		response(c, http.StatusInternalServerError, err.Error(), nil)
 		return
 	}
-	c.JSON(http.StatusOK, todo)
+	response(c, http.StatusOK, "success", todo)
 }
 
 func (h *TodoHandler) Delete(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
 	if err := h.repo.Delete(uint(id)); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		response(c, http.StatusInternalServerError, err.Error(), nil)
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"message": "deleted"})
-}
-
-func (h *TodoHandler) Toggle(c *gin.Context) {
-	id, _ := strconv.Atoi(c.Param("id"))
-	todo, err := h.repo.GetByID(uint(id))
-	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "todo not found"})
-		return
-	}
-	todo.Completed = !todo.Completed
-	if err := h.repo.Update(&todo); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-	c.JSON(http.StatusOK, todo)
+	response(c, http.StatusOK, "deleted", nil)
 }

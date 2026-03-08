@@ -13,6 +13,5 @@ func SetupRoutes(r *gin.Engine, h *handlers.TodoHandler) {
 		api.POST("/todos", h.Create)
 		api.PUT("/todos/:id", h.Update)
 		api.DELETE("/todos/:id", h.Delete)
-		api.PATCH("/todos/:id/toggle", h.Toggle)
 	}
 }
