@@ -164,7 +164,7 @@ A fetcher utility is structured by HTTP method (Get, Post, Put, Delete), and eve
 
 ### Component Design
 Components are split into two levels:
-- `components/ui/` — Reusable across the entire app (Button, InputField, SelectField, Badge, Spinner, Modal, StatusSelector)
+- `components/ui/` — Reusable across the entire app (InputField, SelectField, Badge, Spinner, Modal, StatusSelector)
 - `scenes/TodoList/components/` — Scoped to the TodoList scene only (TodoCard, TodoDetailModal, TodoForm)
 
 `TodoForm` handles both create and edit modes via a `mode` prop, eliminating duplication between the two forms.
