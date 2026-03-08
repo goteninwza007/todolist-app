@@ -1,17 +1,16 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import TodoListScene from "./scenes/TodoList"
+import { TodoProvider } from "./context/TodoContext"
+import { LoadingProvider } from "./context/LoadingContext"
+import Spinner from "./components/ui/Spinner"
 
-function App() {
-  const [count, setCount] = useState(0)
-
+const App: React.FC = () => {
   return (
-    <>
-      <h1 className="text-xl font-bold underline">
-      Hello world!
-    </h1>
-    </>
+    <LoadingProvider>
+      <TodoProvider>
+        <Spinner />
+        <TodoListScene />
+      </TodoProvider>
+    </LoadingProvider>
   )
 }
 

@@ -1,1 +1,9 @@
-@import "tailwindcss"
+@import "tailwindcss";
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+* {
+  font-family: 'Outfit', sans-serif;
+}
