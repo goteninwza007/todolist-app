@@ -51,7 +51,7 @@ pnpm install
 pnpm dev
 ```
 
-- Client → http://localhost:5173
+- Client → http://localhost:3000
 - Server → http://localhost:8080/api/todos
 
 ### Stop the project
@@ -102,8 +102,7 @@ docker compose up --build
 │   │   │       ├── components/
 │   │   │       │   ├── TodoCard.tsx        # Todo card for list view
 │   │   │       │   ├── TodoDetailModal.tsx # Detail view with inline status change
-│   │   │       │   ├── TodoEditModal.tsx   # Edit form modal
-│   │   │       │   └── TodoForm.tsx        # Create form modal
+│   │   │       │   └── TodoForm.tsx        # Create & edit form (mode: "create" | "edit")
 │   │   │       └── index.tsx              # Main scene (filter, sort, grid)
 │   │   │
 │   │   ├── schemas/
@@ -166,7 +165,9 @@ A fetcher utility is structured by HTTP method (Get, Post, Put, Delete), and eve
 ### Component Design
 Components are split into two levels:
 - `components/ui/` — Reusable across the entire app (Button, InputField, SelectField, Badge, Spinner, Modal, StatusSelector)
-- `scenes/TodoList/components/` — Scoped to the TodoList scene only (TodoCard, TodoForm, TodoDetailModal, TodoEditModal)
+- `scenes/TodoList/components/` — Scoped to the TodoList scene only (TodoCard, TodoDetailModal, TodoForm)
+
+`TodoForm` handles both create and edit modes via a `mode` prop, eliminating duplication between the two forms.
 
 ### Form Validation
 React Hook Form + Zod was chosen because Zod allows schema definition to be the single source of truth, and TypeScript types can be inferred directly from the schema — reducing duplication between validation logic and type definitions.
