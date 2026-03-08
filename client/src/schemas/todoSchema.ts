@@ -1,9 +1,9 @@
 import { z } from "zod"
 import { sizeOptions, priorityOptions, statusOptions } from "../constants/todoOptions"
 
-const sizeValues = sizeOptions.map((o) => o.value) as [string, ...string[]]
-const priorityValues = priorityOptions.map((o) => o.value) as [string, ...string[]]
-const statusValues = statusOptions.map((o) => o.value) as [string, ...string[]]
+const sizeValues = sizeOptions.map((o) => o.value)
+const priorityValues = priorityOptions.map((o) => o.value)
+const statusValues = statusOptions.map((o) => o.value)
 
 export const todoSchema = z.object({
     title: z.string().min(1, "Title is required").max(100, "Title is too long"),
