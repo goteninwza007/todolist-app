@@ -1,5 +1,4 @@
-import { useState } from "react"
-import type { Todo, Status } from "../../../types/todo"
+import type { Todo } from "../../../types/todo"
 import { useTodo } from "../../../context/TodoContext"
 import { useLoading } from "../../../context/LoadingContext"
 import Button from "../../../components/ui/Button"
@@ -8,6 +7,7 @@ import Badge from "../../../components/ui/Badge"
 import { priorityConfig, sizeConfig } from "../../../constants/todo"
 import { formatDate } from "../../../utils/format"
 import { sleep } from "../../../utils/sleep"
+import type { Status } from "../../../types/todo"
 
 type TodoDetailModalProps = {
   todo: Todo
@@ -18,7 +18,6 @@ type TodoDetailModalProps = {
 const TodoDetailModal: React.FC<TodoDetailModalProps> = ({ todo, onClose, onEdit }) => {
   const { deleteTodo, updateTodo } = useTodo()
   const { showLoading, hideLoading } = useLoading()
-  const [currentStatus, setCurrentStatus] = useState<Status>(todo.status)
 
   const handleDelete = async () => {
     showLoading()
@@ -29,7 +28,6 @@ const TodoDetailModal: React.FC<TodoDetailModalProps> = ({ todo, onClose, onEdit
   }
 
   const handleStatusChange = async (status: Status) => {
-    setCurrentStatus(status)
     showLoading()
     await updateTodo(todo.id, {
       title: todo.title,
@@ -44,7 +42,6 @@ const TodoDetailModal: React.FC<TodoDetailModalProps> = ({ todo, onClose, onEdit
   }
 
   const formattedDate = formatDate(todo.deadline)
-
   const priority = priorityConfig[todo.priority]
   const size = sizeConfig[todo.size]
 
@@ -67,7 +64,7 @@ const TodoDetailModal: React.FC<TodoDetailModalProps> = ({ todo, onClose, onEdit
       </div>
       <div>
         <p className="text-xs font-medium text-slate-400 mb-2">Status</p>
-        <StatusSelector value={currentStatus} onChange={handleStatusChange} />
+        <StatusSelector value={todo.status} onChange={handleStatusChange} />
       </div>
       <div className="flex justify-between pt-3 border-t border-slate-100">
         <Button label="Delete" variant="danger" size="sm" onClick={handleDelete} />

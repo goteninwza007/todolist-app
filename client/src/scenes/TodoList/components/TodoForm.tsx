@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useTodo } from "../../../context/TodoContext"
 import { useLoading } from "../../../context/LoadingContext"
-import type { CreateTodoInput } from "../../../types/todo"
+import type { Todo, CreateTodoInput, UpdateTodoInput } from "../../../types/todo"
 import Button from "../../../components/ui/Button"
 import InputField from "../../../components/ui/InputField"
 import SelectField from "../../../components/ui/SelectField"
@@ -10,13 +10,17 @@ import { sleep } from "../../../utils/sleep"
 import { todoSchema, type TodoFormValues } from "../../../schemas/todoSchema"
 import { priorityOptions, sizeOptions, statusOptions } from "../../../constants/todoOptions"
 
-type TodoFormProps = {
-  onClose: () => void
-}
+type TodoFormProps =
+  | { mode: "create"; onClose: () => void }
+  | { mode: "edit"; todo: Todo; onClose: () => void }
 
-const TodoForm: React.FC<TodoFormProps> = ({ onClose }) => {
-  const { addTodo } = useTodo()
+const TodoForm: React.FC<TodoFormProps> = (props) => {
+  const { onClose } = props
+  const { addTodo, updateTodo } = useTodo()
   const { showLoading, hideLoading } = useLoading()
+
+  const isEdit = props.mode === "edit"
+  const todo = isEdit ? props.todo : null
 
   const today = new Date()
   const minDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`
@@ -29,16 +33,32 @@ const TodoForm: React.FC<TodoFormProps> = ({ onClose }) => {
     formState: { errors },
   } = useForm({
     resolver: zodResolver(todoSchema),
-    defaultValues: {
-      size: "",
-      priority: "",
-      status: "",
-    },
+    defaultValues: isEdit
+      ? {
+        title: todo?.title ?? "",
+        description: todo?.description ?? "",
+        deadline: todo?.deadline.split("T")[0] ?? "",
+        size: todo?.size ?? "",
+        priority: todo?.priority ?? "",
+        status: todo?.status ?? "",
+      }
+      : {
+        title: "",
+        description: "",
+        deadline: "",
+        size: "",
+        priority: "",
+        status: "",
+      },
   })
 
   const onSubmit = async (values: TodoFormValues) => {
     showLoading()
-    await addTodo(values as CreateTodoInput)
+    if (isEdit) {
+      await updateTodo(todo!.id, values as UpdateTodoInput)
+    } else {
+      await addTodo(values as CreateTodoInput)
+    }
     await sleep(500)
     hideLoading()
     onClose()
@@ -72,8 +92,8 @@ const TodoForm: React.FC<TodoFormProps> = ({ onClose }) => {
         <label className="text-xs font-medium text-slate-500 mb-1 block">Deadline</label>
         <InputField
           type="date"
-          error={errors.deadline?.message}
           min={minDate}
+          error={errors.deadline?.message}
           {...register("deadline")}
         />
       </div>
@@ -110,7 +130,7 @@ const TodoForm: React.FC<TodoFormProps> = ({ onClose }) => {
 
       <div className="flex justify-end gap-2 pt-2">
         <Button label="Cancel" variant="secondary" onClick={onClose} />
-        <Button label="Create Task" type="submit" />
+        <Button label={isEdit ? "Save Changes" : "Create Task"} type="submit" />
       </div>
     </form>
   )

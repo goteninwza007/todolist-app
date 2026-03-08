@@ -3,9 +3,8 @@ import { useTodo } from "../../context/TodoContext"
 import TodoCard from "./components/TodoCard"
 import TodoForm from "./components/TodoForm"
 import TodoDetailModal from "./components/TodoDetailModal"
-import TodoEditModal from "./components/TodoEditModal"
 import Modal from "../../components/ui/Modal"
-import type { Todo, Status } from "../../types/todo"
+import type { Status } from "../../types/todo"
 
 type FilterStatus = "all" | Status
 type SortBy = "created_at" | "deadline"
@@ -26,13 +25,17 @@ const TodoListScene: React.FC = () => {
   const { fetchTodos, state } = useTodo()
   const [filter, setFilter] = useState<FilterStatus>("all")
   const [sortBy, setSortBy] = useState<SortBy>("created_at")
-  const [selectedTodo, setSelectedTodo] = useState<Todo | null>(null)
+  const [selectedId, setSelectedId] = useState<number | null>(null)
   const [isFormOpen, setIsFormOpen] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
 
   useEffect(() => {
     fetchTodos()
   }, [fetchTodos])
+
+  const selectedTodo = selectedId !== null
+    ? state.todos.find((t) => t.id === selectedId) ?? null
+    : null
 
   const filteredTodos = state.todos
     .filter((todo) => filter === "all" ? true : todo.status === filter)
@@ -64,8 +67,8 @@ const TodoListScene: React.FC = () => {
                 key={f.value}
                 onClick={() => setFilter(f.value)}
                 className={`px-4 py-1.5 rounded-full text-xs font-medium border transition-colors ${filter === f.value
-                    ? "bg-indigo-600 text-white border-indigo-600"
-                    : "bg-white text-slate-500 border-slate-200 hover:border-indigo-300"
+                  ? "bg-indigo-600 text-white border-indigo-600"
+                  : "bg-white text-slate-500 border-slate-200 hover:border-indigo-300"
                   }`}
               >
                 {f.label}
@@ -79,8 +82,8 @@ const TodoListScene: React.FC = () => {
                 key={s.value}
                 onClick={() => setSortBy(s.value)}
                 className={`px-4 py-1.5 rounded-full text-xs font-medium border transition-colors ${sortBy === s.value
-                    ? "bg-slate-700 text-white border-slate-700"
-                    : "bg-white text-slate-500 border-slate-200 hover:border-slate-300"
+                  ? "bg-slate-700 text-white border-slate-700"
+                  : "bg-white text-slate-500 border-slate-200 hover:border-slate-300"
                   }`}
               >
                 {s.label}
@@ -105,7 +108,7 @@ const TodoListScene: React.FC = () => {
               key={todo.id}
               todo={todo}
               onClick={() => {
-                setSelectedTodo(todo)
+                setSelectedId(todo.id)
                 setIsEditing(false)
               }}
             />
@@ -115,7 +118,7 @@ const TodoListScene: React.FC = () => {
 
       {isFormOpen && (
         <Modal title="New Task" onClose={() => setIsFormOpen(false)}>
-          <TodoForm onClose={() => setIsFormOpen(false)} />
+          <TodoForm mode="create" onClose={() => setIsFormOpen(false)} />
         </Modal>
       )}
 
@@ -123,22 +126,23 @@ const TodoListScene: React.FC = () => {
         <Modal
           title={isEditing ? "Edit Task" : "Task Detail"}
           onClose={() => {
-            setSelectedTodo(null)
+            setSelectedId(null)
             setIsEditing(false)
           }}
         >
           {isEditing ? (
-            <TodoEditModal
+            <TodoForm
+              mode="edit"
               todo={selectedTodo}
               onClose={() => {
-                setSelectedTodo(null)
+                setSelectedId(null)
                 setIsEditing(false)
               }}
             />
           ) : (
             <TodoDetailModal
               todo={selectedTodo}
-              onClose={() => setSelectedTodo(null)}
+              onClose={() => setSelectedId(null)}
               onEdit={() => setIsEditing(true)}
             />
           )}
