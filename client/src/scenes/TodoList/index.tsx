@@ -92,11 +92,11 @@ const TodoListScene: React.FC = () => {
           </div>
         </div>
 
-        {state.error && (
-          <p className="text-sm text-red-500 mb-4">{state.error}</p>
-        )}
+        { }
 
-        {filteredTodos.length === 0 && (
+        {state.error ? (
+          <p className="text-center text-sm text-red-500 mt-20">{state.error}</p>
+        ) : filteredTodos.length === 0 && (
           <p className="text-center text-sm text-slate-400 mt-20">
             No tasks found. Add one!
           </p>

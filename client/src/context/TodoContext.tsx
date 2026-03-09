@@ -1,6 +1,7 @@
 import { createContext, useContext, useReducer, useCallback } from "react"
 import todoApi from "../api/todoApi"
 import type { Todo, CreateTodoInput, UpdateTodoInput } from "../types/todo"
+import { toast } from "sonner"
 
 type TodoState = {
   todos: Todo[]
@@ -65,18 +66,24 @@ export const TodoProvider = ({ children }: { children: React.ReactNode }) => {
   const addTodo = useCallback(async (input: CreateTodoInput) => {
     try {
       const res = await todoApi.create(input)
-      if (res.data) dispatch({ type: "ADD_TODO", payload: res.data })
+      if (res.data) {
+        dispatch({ type: "ADD_TODO", payload: res.data })
+        toast.success("Task created")
+      }
     } catch {
-      dispatch({ type: "SET_ERROR", payload: "Failed to add todo" })
+      toast.error("Failed to add todo")
     }
   }, [])
 
   const updateTodo = useCallback(async (id: number, input: UpdateTodoInput) => {
     try {
       const res = await todoApi.update(id, input)
-      if (res.data) dispatch({ type: "UPDATE_TODO", payload: res.data })
+      if (res.data) {
+        dispatch({ type: "UPDATE_TODO", payload: res.data })
+        toast.success("Task updated")
+      }
     } catch {
-      dispatch({ type: "SET_ERROR", payload: "Failed to update todo" })
+      toast.error("Failed to update todo")
     }
   }, [])
 
@@ -84,8 +91,9 @@ export const TodoProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       await todoApi.delete(id)
       dispatch({ type: "DELETE_TODO", payload: id })
+      toast.success("Task deleted")
     } catch {
-      dispatch({ type: "SET_ERROR", payload: "Failed to delete todo" })
+      toast.error("Failed to delete todo")
     }
   }, [])
 
