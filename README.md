@@ -2,6 +2,13 @@
 
 A full-stack Todo application built with React + Go/Gin + PostgreSQL, containerized with Docker Compose.
 
+
+## Video Walkthrough
+
+A walkthrough of the project explaining the code structure, architecture decisions, and development process.
+
+Watch here: https://drive.google.com/file/d/1wTP9isW9AyG0N3JQ4xJWwZHVdFGdkC09/view
+
 ## Tech Stack
 
 ### Client
