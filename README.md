@@ -35,7 +35,15 @@ Watch here: https://drive.google.com/file/d/1wTP9isW9AyG0N3JQ4xJWwZHVdFGdkC09/vi
 - Docker + Docker Compose
 - Node.js + pnpm (for local client development)
 
-### Run everything with Docker
+### 1. Setup environment variables
+
+```bash
+cp server/.env.example server/.env
+```
+
+Edit `server/.env` if needed. The default values work out of the box with Docker Compose.
+
+### 2. Run everything with Docker
 
 ```bash
 docker compose up --build
@@ -140,6 +148,7 @@ docker compose up --build
 │   ├── routes/
 │   │   └── routes.go                # Gin router setup
 │   ├── main.go
+│   ├── .env.example                 # Environment variable template
 │   └── Dockerfile
 │
 └── docker-compose.yml
@@ -171,7 +180,7 @@ A fetcher utility is structured by HTTP method (Get, Post, Put, Delete), and eve
 
 ### Component Design
 Components are split into two levels:
-- `components/ui/` — Reusable across the entire app (InputField, SelectField, Badge, Spinner, Modal, StatusSelector)
+- `components/ui/` — Reusable across the entire app (Button, InputField, SelectField, Badge, Spinner, Modal, StatusSelector)
 - `scenes/TodoList/components/` — Scoped to the TodoList scene only (TodoCard, TodoDetailModal, TodoForm)
 
 `TodoForm` handles both create and edit modes via a `mode` prop, eliminating duplication between the two forms.
