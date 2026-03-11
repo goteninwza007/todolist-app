@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react"
+import { useState, useRef, useEffect } from 'react'
 
 type SelectFieldOption = {
   value: string
@@ -7,6 +7,7 @@ type SelectFieldOption = {
 
 type SelectFieldProps = {
   value: string
+  label?: string
   options: SelectFieldOption[]
   onChange: (value: string) => void
   className?: string
@@ -15,9 +16,10 @@ type SelectFieldProps = {
 
 const SelectField: React.FC<SelectFieldProps> = ({
   value,
+  label,
   options,
   onChange,
-  className = "",
+  className = '',
   error,
 }) => {
   const [isOpen, setIsOpen] = useState(false)
@@ -29,27 +31,33 @@ const SelectField: React.FC<SelectFieldProps> = ({
         setIsOpen(false)
       }
     }
-    document.addEventListener("mousedown", handleClickOutside)
-    return () => document.removeEventListener("mousedown", handleClickOutside)
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
   const current = options.find((o) => o.value === value)
 
   return (
     <div ref={ref} className={`relative ${className}`}>
+      {label && (
+        <label className="text-xs font-medium text-slate-500 mb-1 block">
+          {label}
+        </label>
+      )}
       <button
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}
         className={`w-full flex items-center justify-between px-3 py-2 rounded-lg border text-sm font-medium transition-all hover:border-slate-300 focus:outline-none
-          ${error
-            ? "border-red-400 focus:border-red-400 focus:ring-1 focus:ring-red-400"
-            : "border-slate-200 bg-white text-slate-600 focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400"
+          ${
+            error
+              ? 'border-red-400 focus:border-red-400 focus:ring-1 focus:ring-red-400'
+              : 'border-slate-200 bg-white text-slate-600 focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400'
           }`}
       >
-        <span className={value ? "text-slate-600" : "text-slate-400"}>
-          {current?.label ?? "Select..."}
+        <span className={value ? 'text-slate-600' : 'text-slate-400'}>
+          {current?.label ?? 'Select...'}
         </span>
-        <span className="text-slate-400 text-xs">{isOpen ? "▴" : "▾"}</span>
+        <span className="text-slate-400 text-xs">{isOpen ? '▴' : '▾'}</span>
       </button>
 
       {error && <p className="text-xs text-red-500 mt-1">{error}</p>}
@@ -67,7 +75,7 @@ const SelectField: React.FC<SelectFieldProps> = ({
                   setIsOpen(false)
                 }}
                 className={`w-full flex items-center justify-between px-3 py-2.5 text-sm font-medium transition-colors
-                  ${isActive ? "bg-slate-50 text-slate-700" : "text-slate-500 hover:bg-slate-50"}`}
+                  ${isActive ? 'bg-slate-50 text-slate-700' : 'text-slate-500 hover:bg-slate-50'}`}
               >
                 {opt.label}
                 {isActive && <span className="text-indigo-500 text-xs">✓</span>}

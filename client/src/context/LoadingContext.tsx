@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react"
+import { createContext, useContext, useState } from 'react'
 
 type LoadingContextType = {
   isLoading: boolean
@@ -8,7 +8,9 @@ type LoadingContextType = {
 
 const LoadingContext = createContext<LoadingContextType | null>(null)
 
-export const LoadingProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const LoadingProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [isLoading, setIsLoading] = useState(false)
 
   const showLoading = () => setIsLoading(true)
@@ -21,8 +23,10 @@ export const LoadingProvider: React.FC<{ children: React.ReactNode }> = ({ child
   )
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useLoading = () => {
   const context = useContext(LoadingContext)
-  if (!context) throw new Error("useLoading must be used within LoadingProvider")
+  if (!context)
+    throw new Error('useLoading must be used within LoadingProvider')
   return context
 }

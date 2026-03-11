@@ -1,7 +1,11 @@
-import Badge from "../../../components/ui/Badge"
-import { priorityConfig, sizeConfig, statusConfig } from "../../../constants/todo"
-import type { Todo } from "../../../types/todo"
-import { formatDate } from "../../../utils/format"
+import Badge from '../../../components/ui/Badge'
+import {
+  priorityConfig,
+  sizeConfig,
+  statusConfig,
+} from '../../../constants/todo'
+import type { Todo } from '../../../types/todo'
+import { formatDate } from '../../../utils/format'
 
 type TodoCardProps = {
   todo: Todo
@@ -32,7 +36,11 @@ const TodoCard: React.FC<TodoCardProps> = ({ todo, onClick }) => {
         {todo.title}
       </p>
       <div className="flex gap-1.5 mb-3">
-        <Badge label={priority.label} colorClass={priority.color} dotClass={priority.dot} />
+        <Badge
+          label={priority.label}
+          colorClass={priority.color}
+          dotClass={priority.dot}
+        />
         <Badge
           label={size}
           colorClass="bg-violet-50 text-violet-600"

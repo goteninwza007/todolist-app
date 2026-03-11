@@ -1,6 +1,6 @@
-export type Size = "xs" | "s" | "m" | "l" | "xl"
-export type Priority = "low" | "medium" | "high"
-export type Status = "todo" | "in_progress" | "done"
+export type Size = 'xs' | 's' | 'm' | 'l' | 'xl'
+export type Priority = 'low' | 'medium' | 'high'
+export type Status = 'todo' | 'in_progress' | 'done'
 
 export type Todo = {
   id: number

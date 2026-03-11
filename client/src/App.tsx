@@ -1,8 +1,8 @@
-import TodoListScene from "./scenes/TodoList"
-import { TodoProvider } from "./context/TodoContext"
-import { LoadingProvider } from "./context/LoadingContext"
-import Spinner from "./components/ui/Spinner"
-import { Toaster } from "sonner"
+import TodoListScene from './scenes/TodoList'
+import { TodoProvider } from './context/TodoContext'
+import { LoadingProvider } from './context/LoadingContext'
+import Spinner from './components/ui/Spinner'
+import { Toaster } from 'sonner'
 
 const App: React.FC = () => {
   return (

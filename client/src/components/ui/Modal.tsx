@@ -17,9 +17,7 @@ const Modal: React.FC<ModalProps> = ({ title, onClose, children }) => {
             ×
           </button>
         </div>
-        <div className="px-6 py-5">
-          {children}
-        </div>
+        <div className="px-6 py-5">{children}</div>
       </div>
     </div>
   )
