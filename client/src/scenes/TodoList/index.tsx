@@ -6,6 +6,7 @@ import TodoDetailModal from './components/TodoDetailModal'
 import Modal from '../../components/ui/Modal'
 import type { Status } from '../../types/todo'
 import Button from '../../components/ui/Button'
+import { useLoading } from '../../context/LoadingContext'
 
 type FilterStatus = 'all' | Status
 type SortBy = 'created_at' | 'deadline'
@@ -23,6 +24,7 @@ const sorts: { label: string; value: SortBy }[] = [
 ]
 
 const TodoListScene: React.FC = () => {
+  const { showLoading, hideLoading } = useLoading()
   const { fetchTodos, state } = useTodo()
   const [filter, setFilter] = useState<FilterStatus>('all')
   const [sortBy, setSortBy] = useState<SortBy>('created_at')
@@ -31,8 +33,8 @@ const TodoListScene: React.FC = () => {
   const [isEditing, setIsEditing] = useState(false)
 
   useEffect(() => {
-    fetchTodos()
-  }, [fetchTodos])
+    fetchTodos({ showLoading, hideLoading })
+  }, [fetchTodos, showLoading, hideLoading])
 
   const selectedTodo =
     selectedId !== null

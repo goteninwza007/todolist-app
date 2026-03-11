@@ -47,7 +47,10 @@ const todoReducer = (state: TodoState, action: TodoAction): TodoState => {
 
 type TodoContextType = {
   state: TodoState
-  fetchTodos: () => Promise<void>
+  fetchTodos: (loadingHandlers?: {
+    showLoading?: () => void
+    hideLoading?: () => void
+  }) => Promise<void>
   addTodo: (input: CreateTodoInput) => Promise<void>
   updateTodo: (id: number, input: UpdateTodoInput) => Promise<void>
   deleteTodo: (id: number) => Promise<void>
@@ -58,15 +61,25 @@ const TodoContext = createContext<TodoContextType | null>(null)
 export const TodoProvider = ({ children }: { children: React.ReactNode }) => {
   const [state, dispatch] = useReducer(todoReducer, initialState)
 
-  const fetchTodos = useCallback(async () => {
-    dispatch({ type: 'SET_ERROR', payload: null })
-    try {
-      const res = await todoApi.getAll()
-      dispatch({ type: 'SET_TODOS', payload: res.data ?? [] })
-    } catch {
-      dispatch({ type: 'SET_ERROR', payload: 'Failed to fetch todos' })
-    }
-  }, [])
+  const fetchTodos = useCallback(
+    async (options?: {
+      showLoading?: () => void
+      hideLoading?: () => void
+    }) => {
+      options?.showLoading?.()
+      dispatch({ type: 'SET_ERROR', payload: null })
+      try {
+        const res = await todoApi.getAll()
+        dispatch({ type: 'SET_TODOS', payload: res.data ?? [] })
+      } catch {
+        toast.error('Failed to fetch todos')
+        dispatch({ type: 'SET_ERROR', payload: 'Failed to fetch todos' })
+      } finally {
+        options?.hideLoading?.()
+      }
+    },
+    [],
+  )
 
   const addTodo = useCallback(async (input: CreateTodoInput) => {
     try {

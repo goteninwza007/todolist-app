@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from 'react'
+import { createContext, useCallback, useContext, useState } from 'react'
 
 type LoadingContextType = {
   isLoading: boolean
@@ -13,8 +13,8 @@ export const LoadingProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [isLoading, setIsLoading] = useState(false)
 
-  const showLoading = () => setIsLoading(true)
-  const hideLoading = () => setIsLoading(false)
+  const showLoading = useCallback(() => setIsLoading(true), [])
+  const hideLoading = useCallback(() => setIsLoading(false), [])
 
   return (
     <LoadingContext.Provider value={{ isLoading, showLoading, hideLoading }}>
