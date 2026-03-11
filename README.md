@@ -7,7 +7,7 @@ A full-stack Todo application built with React + Go/Gin + PostgreSQL, containeri
 
 A walkthrough of the project explaining the code structure, architecture decisions, and development process.
 
-Watch here: https://drive.google.com/file/d/1wTP9isW9AyG0N3JQ4xJWwZHVdFGdkC09/view
+Watch here: https://drive.google.com/file/d/1kzZGry-s-OUbH7891E97dFVUoX2h84oh/view
 
 ## Tech Stack
 
